@@ -8,6 +8,9 @@ const authRouter = require('./routes/api/auth');
 
 connectDB();
 
+// Init middleware
+app.use(express.json({ extended: false }));
+
 app.use('/api', userRouter);
 app.use('/api', profileRouter);
 app.use('/api', postsRouter);
