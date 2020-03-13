@@ -1,5 +1,7 @@
 const Profile = require('../models/Profile');
 const { check, validationResult } = require('express-validator');
+var mongoose = require('mongoose');
+var ObjectId = mongoose.Types.ObjectId;
 
 exports.getMyProfile = async (req, res) => {
   try {
@@ -22,34 +24,21 @@ exports.createAndUpdateProfile = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const {
-      company,
-      website,
-      location,
-      bio,
-      status,
-      githubusername,
-      skills,
-      youtube,
-      facebook,
-      twitter,
-      instagram,
-      linkedin
-    } = req.body;
 
-    // Build profile object
     let profileFields = {};
-    profileFields.user = req.user.id;
-    profileFields.company = company ? company : undefined;
-    profileFields.website = website ? website : undefined;
-    profileFields.location = location ? location : undefined;
-    profileFields.bio = bio ? bio : undefined;
-    profileFields.status = status ? status : undefined;
-    profileFields.githubusername = githubusername ? githubusername : undefined;
-    if (skills) {
-      profileFields.skills = skills.split(',').map(skill => skill.trim());
+    // Build profile object (refers to the ovbject above as a referance)
+    buildProfileObject(req, profileFields);
+    buildSocialFields(req, profileFields);
+
+    const profile = await Profile.findOne({ user: req.user.id });
+
+    if (profile) {
+      // Update
+      return updateProfile(profile, req, res, profileFields);
     }
-    console.log(profileFields.skills);
+
+    // Create
+    return createProfile(profile, res, profileFields);
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server Error');
@@ -57,8 +46,53 @@ exports.createAndUpdateProfile = async (req, res) => {
 };
 
 // functions in javascript can change the object that is recieved as param (like a reference)
-function buildProfileObject(req, profileFields) {}
+function buildProfileObject(req, profileFields) {
+  const {
+    company,
+    website,
+    location,
+    bio,
+    status,
+    githubusername,
+    skills
+  } = req.body;
 
-updateProfile = async (req, res) => {};
+  profileFields.user = req.user.id;
+  if (company) profileFields.company = company;
+  if (website) profileFields.website = website;
+  if (location) profileFields.location = location;
+  if (bio) profileFields.bio = bio;
+  if (status) profileFields.status = status;
+  if (githubusername) profileFields.githubusername = githubusername;
+  if (skills) {
+    profileFields.skills = skills.split(',').map(skill => skill.trim());
+  }
+}
 
-createProfile = async (req, res) => {};
+function buildSocialFields(req, profileFields) {
+  profileFields.social = {};
+  const { youtube, facebook, twitter, instagram, linkedin } = req.body;
+
+  if (youtube) profileFields.social.youtube = youtube;
+  if (twitter) profileFields.social.twitter = twitter;
+  if (facebook) profileFields.social.facebook = facebook;
+  if (linkedin) profileFields.social.linkedin = linkedin;
+  if (instagram) profileFields.social.instagram = instagram;
+}
+
+async function updateProfile(profile, req, res, profileFields) {
+  profile = await Profile.findOneAndUpdate(
+    { user: req.user.id },
+    { $set: profileFields },
+    { new: true }
+  );
+
+  return res.json(profile);
+}
+
+async function createProfile(profile, res, profileFields) {
+  profile = new Profile(profileFields);
+  await profile.save();
+
+  return res.json(profile);
+}
