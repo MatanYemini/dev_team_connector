@@ -4,16 +4,16 @@ const isAuth = require('../../middleware/is-auth');
 const authController = require('../../controllers/auth');
 const { body, check, validationResult } = require('express-validator');
 
-// @route   GET api/auth
+// @route   GET api/auth/authenticate
 // @desc    Authenticate & getToken
 // @access  Public
-router.get('/auth', isAuth, authController.getUser);
+router.get('/authenticate', isAuth, authController.getUser);
 
-// @route   POST api/auth
+// @route   POST api/auth/login
 // @desc    Login
 // @access  Public
 router.post(
-  '/auth',
+  '/login',
   [
     body('email')
       .isEmail()

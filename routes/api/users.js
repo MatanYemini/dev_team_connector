@@ -6,11 +6,11 @@ const { body, check, validationResult } = require('express-validator');
 const User = require('../../models/User');
 const userController = require('../../controllers/user');
 
-// @route   POST api/users
+// @route   POST api/users/register
 // @desc    Register User
 // @access  Public
 router.post(
-  '/users',
+  '/register',
   [
     body('email')
       .isEmail()
