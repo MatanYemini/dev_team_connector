@@ -43,4 +43,65 @@ router.post(
 // @access  Public
 router.get('/', profileController.getAllProfiles);
 
+// @route   PUT api/profile/experience
+// @desc    Add profile experience
+// @access  Private
+router.put(
+  '/experience',
+  [
+    isAuth,
+    [
+      check('title', 'title is required')
+        .not()
+        .isEmpty(),
+      check('company', 'company is required')
+        .not()
+        .isEmpty(),
+      check('from', 'from date is required')
+        .not()
+        .isEmpty()
+    ]
+  ],
+  profileController.addExperience
+);
+
+// @route   DELETE api/profile/experience/:exp_id
+// @desc    Delete experience from profile
+// @access  Private
+router.delete(
+  '/experience/:exp_id',
+  isAuth,
+  profileController.deleteExperience
+);
+
+// @route   PUT api/profile/education
+// @desc    Add profile education
+// @access  Private
+router.put(
+  '/education',
+  [
+    isAuth,
+    [
+      check('school', 'School is required')
+        .not()
+        .isEmpty(),
+      check('degree', 'Degree is required')
+        .not()
+        .isEmpty(),
+      check('fieldofstudy', 'Field of study is required')
+        .not()
+        .isEmpty(),
+      check('from', 'From date is required')
+        .not()
+        .isEmpty()
+    ]
+  ],
+  profileController.addEducation
+);
+
+// @route   DELETE api/profile/education/:edu_id
+// @desc    Delete education from profile
+// @access  Private
+router.delete('/education/:edu_id', isAuth, profileController.deleteEducation);
+
 module.exports = router;
