@@ -11,10 +11,10 @@ connectDB();
 // Init middleware
 app.use(express.json({ extended: false }));
 
-app.use('/api', userRouter);
-app.use('/api', profileRouter);
-app.use('/api', postsRouter);
-app.use('/api', authRouter);
+app.use('/api/users', userRouter);
+app.use('/api/profile', profileRouter);
+app.use('/api/posts', postsRouter);
+app.use('/api/auth', authRouter);
 
 app.get('/', (req, res) => res.send('API RUNNING'));
 
