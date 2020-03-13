@@ -4,6 +4,11 @@ const isAuth = require('../../middleware/is-auth');
 const profileController = require('../../controllers/profile');
 const { check } = require('express-validator');
 
+// @route   GET api/profile/user/:user_id
+// @desc    Get profile by user id
+// @access  Public
+router.get('/user/:userId', profileController.getProfileById);
+
 // @route   GET api/profile/me
 // @desc    Get current user's profile
 // @access  Private
@@ -27,5 +32,10 @@ router.post(
   ],
   profileController.createAndUpdateProfile
 );
+
+// @route   GET api/profile/
+// @desc    Get all profiles
+// @access  Public
+router.get('/', profileController.getAllProfiles);
 
 module.exports = router;

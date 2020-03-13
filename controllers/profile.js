@@ -45,6 +45,34 @@ exports.createAndUpdateProfile = async (req, res) => {
   }
 };
 
+exports.getAllProfiles = async (req, res) => {
+  try {
+    const profiles = await Profile.find().populate('user', ['name', 'avatar']);
+    res.send(profiles);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+};
+
+exports.getProfileById = async (req, res) => {
+  try {
+    const profile = await Profile.findOne({
+      user: req.params.userId
+    }).populate('user', ['name', 'avatar']);
+
+    if (!profile) return res.status(400).json({ msg: 'Profile not found' });
+
+    res.send(profile);
+  } catch (error) {
+    console.error(error.message);
+    if (error.kind == 'ObjectId') {
+      return res.status(400).json({ msg: 'Profile not found' });
+    }
+    res.status(500).send('Server Error');
+  }
+};
+
 // functions in javascript can change the object that is recieved as param (like a reference)
 function buildProfileObject(req, profileFields) {
   const {
