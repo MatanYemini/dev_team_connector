@@ -9,10 +9,15 @@ const { check } = require('express-validator');
 // @access  Public
 router.get('/user/:userId', profileController.getProfileById);
 
-// @route   GET api/profile/me
-// @desc    Get current user's profile
+// @route   DELETE api/profile/
+// @desc    Delete profile, user and posts
 // @access  Private
-router.get('/me', isAuth, profileController.getMyProfile);
+router.delete('/', isAuth, profileController.deleteProfileUserPost);
+
+// @route   GET api/profile/
+// @desc    Get all profiles
+// @access  Public
+router.get('/', profileController.getAllProfiles);
 
 // @route   POST api/profile/
 // @desc    Create or Update user's profile

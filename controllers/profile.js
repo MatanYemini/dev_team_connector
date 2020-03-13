@@ -73,6 +73,35 @@ exports.getProfileById = async (req, res) => {
   }
 };
 
+exports.deleteProfileUserPost = async (req, res) => {
+  // @todo - remove users posts
+
+  // Remove profile
+  removeProfile(req);
+  // Remove user
+  removeUser(req);
+
+  res.json({ msg: 'All Deleted - user and profile' });
+};
+
+async function removeProfile(req) {
+  try {
+    await Profile.findOneAndRemove({ user: req.user.id });
+    console.log('profile removed');
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function removeUser(req) {
+  try {
+    await User.findOneAndRemove({ _id: req.user.id });
+    console.log('user removed');
+  } catch (error) {
+    throw error;
+  }
+}
+
 // functions in javascript can change the object that is recieved as param (like a reference)
 function buildProfileObject(req, profileFields) {
   const {
