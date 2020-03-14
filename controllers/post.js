@@ -20,7 +20,98 @@ exports.addPost = async (req, res) => {
     const post = await newPost.save();
     res.json(post);
   } catch (error) {
-    console.error(err.message);
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+};
+
+exports.getAllPosts = async (req, res) => {
+  try {
+    const posts = await Post.find().sort({ date: -1 });
+    res.json(posts);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+};
+
+exports.getPostById = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id).sort({ date: -1 });
+
+    if (!post) {
+      return res.status(404).json({ msg: 'post not found' });
+    }
+    res.json(post);
+  } catch (error) {
+    if (error.kind == 'ObjectId') {
+      return res.status(404).json({ msg: 'post not found' });
+    }
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+};
+
+exports.deletePost = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+
+    // Check post
+    if (!post) {
+      return res.status(404).json({ msg: 'Post not found' });
+    }
+    // Check user
+    if (post.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'User not authorized' });
+    }
+
+    await post.remove();
+    res.json({ msg: 'Post removed' });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+};
+
+exports.likePost = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+
+    // Check if the post was liked
+    if (
+      post.likes.filter(like => like.user.toString() === req.user.id).length > 0
+    ) {
+      return res.status(400).json({ msg: 'Post already liked' });
+    }
+
+    post.likes.unshift({ user: req.user.id });
+    await post.save();
+    res.json(post.likes);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+};
+
+exports.unlikePost = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+
+    // Check if the post was liked
+    if (
+      post.likes.filter(like => like.user.toString() === req.user.id).length ===
+      0
+    ) {
+      return res.status(400).json({ msg: 'Post has not yet been liked' });
+    }
+    const removeIndex = post.likes
+      .map(like => like.user.toString())
+      .indexOf(req.user.id);
+    post.likes.splice(removeIndex, 1);
+    await post.save();
+    res.json(post.likes);
+  } catch (error) {
+    console.error(error.message);
     res.status(500).send('Server Error');
   }
 };
