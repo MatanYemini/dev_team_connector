@@ -43,4 +43,23 @@ router.put('/like/:id', isAuth, postController.likePost);
 // @access  Private
 router.put('/unlike/:id', isAuth, postController.unlikePost);
 
+// @route   POST api/posts/comment/:id
+// @desc    Comment on a post
+// @access  Public
+router.post(
+  '/comment/:id',
+  [
+    isAuth,
+    check('text', 'Text is required')
+      .not()
+      .isEmpty()
+  ],
+  postController.addComment
+);
+
+// @route   POST api/posts/comment/:id
+// @desc    Delete on a post
+// @access  Private
+router.delete('/comment/:id/:comment_id', isAuth, postController.deleteComment);
+
 module.exports = router;
