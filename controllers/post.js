@@ -132,10 +132,8 @@ exports.addComment = async (req, res) => {
       avatar: user.avatar,
       user: req.user.id
     };
-    console.log('sdasd');
     post.comments.unshift(newComment);
     await post.save();
-    console.log('sdasd');
     res.json(post.comments);
   } catch (error) {
     console.error(error.message);
