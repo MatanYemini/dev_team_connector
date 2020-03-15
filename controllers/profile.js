@@ -1,7 +1,5 @@
 const Profile = require('../models/Profile');
-const { check, validationResult } = require('express-validator');
-var mongoose = require('mongoose');
-var ObjectId = mongoose.Types.ObjectId;
+const { validationResult } = require('express-validator');
 
 exports.getMyProfile = async (req, res) => {
   try {
