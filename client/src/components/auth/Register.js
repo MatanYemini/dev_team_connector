@@ -2,8 +2,10 @@ import React, { Fragment, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setAlert } from '../../actions/alert';
+import { register } from '../../actions/auth';
+import PropTypes from 'prop-types';
 
-const Register = props => {
+const Register = ({ setAlert, register }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -19,8 +21,9 @@ const Register = props => {
   const onSubmit = async e => {
     e.preventDefault();
     if (password !== password2) {
-      props.setAlert('Password do not match', 'danger');
+      setAlert('Password do not match', 'danger'); // instaed of using props (at top take props as argument and then props.setAlert)
     } else {
+      register({ name, email, password });
       console.log('SUCCESS');
     }
   };
@@ -87,7 +90,12 @@ const Register = props => {
   );
 };
 
-export default connect(null, {})(Register);
+Register.propTypes = {
+  setAlert: PropTypes.func.isRequired,
+  register: PropTypes.func.isRequired
+};
+
+export default connect(null, { setAlert, register })(Register);
 // The first argument represent the state in which we want to use and manipulate.
 // The second argument is the action we want to do.
 // The thied argument is the component we want to connect the store to.
