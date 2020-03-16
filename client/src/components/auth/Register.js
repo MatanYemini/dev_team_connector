@@ -1,8 +1,9 @@
 import React, { Fragment, useState } from 'react';
 import { Link } from 'react-router-dom';
-//import axios from 'axios';
+import { connect } from 'react-redux';
+import { setAlert } from '../../actions/alert';
 
-export const Register = () => {
+const Register = props => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -18,28 +19,10 @@ export const Register = () => {
   const onSubmit = async e => {
     e.preventDefault();
     if (password !== password2) {
-      console.log('Password do not match');
+      props.setAlert('Password do not match', 'danger');
     } else {
       console.log('SUCCESS');
-      //   const newUser = {
-      //     name,
-      //     email,
-      //     password
     }
-    //   try {
-    //     const config = {
-    //       headers: {
-    //         'Content-Type': 'application/json'
-    //       }
-    //     };
-
-    //     const body = JSON.stringify(newUser);
-    //     const res = await axios.post('/api/users/register', body, config);
-    //     console.log(res);
-    //   } catch (error) {
-    //     console.error(error.response.data);
-    //   }
-    // }
   };
 
   return (
@@ -103,3 +86,8 @@ export const Register = () => {
     </Fragment>
   );
 };
+
+export default connect(null, {})(Register);
+// The first argument represent the state in which we want to use and manipulate.
+// The second argument is the action we want to do.
+// The thied argument is the component we want to connect the store to.

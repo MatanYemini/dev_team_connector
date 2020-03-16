@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import NavBar from './components/layouts/Navbar';
-import { Register } from './components/auth/Register';
+import Register from './components/auth/Register';
 import { Login } from './components/auth/Login';
 import Landing from './components/layouts/Landing';
 // Redux
