@@ -1,8 +1,11 @@
 import React, { Fragment, useState } from 'react';
-import { Link } from 'react-router-dom';
-//import axios from 'axios';
+import { Link, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { setAlert } from '../../actions/alert';
+import { register } from '../../actions/auth';
+import PropTypes from 'prop-types';
 
-export const Register = () => {
+const Register = ({ setAlert, register, isAuthenticated }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -18,29 +21,17 @@ export const Register = () => {
   const onSubmit = async e => {
     e.preventDefault();
     if (password !== password2) {
-      console.log('Password do not match');
+      setAlert('Password do not match', 'danger'); // instaed of using props (at top take props as argument and then props.setAlert)
     } else {
+      register({ name, email, password });
       console.log('SUCCESS');
-      //   const newUser = {
-      //     name,
-      //     email,
-      //     password
     }
-    //   try {
-    //     const config = {
-    //       headers: {
-    //         'Content-Type': 'application/json'
-    //       }
-    //     };
-
-    //     const body = JSON.stringify(newUser);
-    //     const res = await axios.post('/api/users/register', body, config);
-    //     console.log(res);
-    //   } catch (error) {
-    //     console.error(error.response.data);
-    //   }
-    // }
   };
+
+  // Redirect if logged in
+  if (isAuthenticated) {
+    return <Redirect to='/dashboard' />;
+  }
 
   return (
     <Fragment>
@@ -103,3 +94,18 @@ export const Register = () => {
     </Fragment>
   );
 };
+
+Register.propTypes = {
+  setAlert: PropTypes.func.isRequired,
+  register: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool
+};
+
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(mapStateToProps, { setAlert, register })(Register);
+// The first argument represent the state in which we want to use and manipulate.
+// The second argument is the action we want to do.
+// The thied argument is the component we want to connect the store to.
