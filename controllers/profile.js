@@ -1,4 +1,6 @@
 const Profile = require('../models/Profile');
+const User = require('../models/User');
+const Post = require('../models/Post');
 const { validationResult } = require('express-validator');
 
 exports.getMyProfile = async (req, res) => {
@@ -72,12 +74,14 @@ exports.getProfileById = async (req, res) => {
 };
 
 exports.deleteProfileUserPost = async (req, res) => {
-  // @todo - remove users posts
-
-  // Remove profile
-  removeProfile(req);
-  // Remove user
-  removeUser(req);
+  try {
+    //Remove Posts
+    await Post.deleteMany({ user: req.user.id });
+    // Remove profile
+    removeProfile(req);
+    // Remove user
+    removeUser(req);
+  } catch (error) {}
 
   res.json({ msg: 'All Deleted - user and profile' });
 };
