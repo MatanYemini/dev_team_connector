@@ -21,10 +21,14 @@ exports.login = async (req, res, next) => {
   try {
     let loadedUser = await User.findOne({ email: email });
     if (!loadedUser) {
+      console.log(email);
       return res.status(400).json({ errors: [{ msg: 'Invalid Credentials' }] });
     }
+    console.log(loadedUser.password);
     const isMatch = await bcrypt.compare(password, loadedUser.password);
+    console.log(isMatch);
     if (!isMatch) {
+      console.log(password);
       return res.status(400).json({ errors: [{ msg: 'Invalid Credentials' }] });
     }
     const payload = {
