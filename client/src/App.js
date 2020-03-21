@@ -21,12 +21,21 @@ import Post from './components/post/Post';
 // Redux
 import { Provider } from 'react-redux';
 import store from './store/store';
+import { saveState } from './localStorage';
+var _ = require('lodash');
+
+store.subscribe(
+  _.throttle(() => {
+    saveState(store.getState());
+  }, 2000)
+);
 
 const App = () => {
   // It is a replacement of 'componentDidMount' should run in event loop every time
   // The empty array refers to the conditions it should run - when empty, it is only once when the state changes
   useEffect(() => {
     store.dispatch(loadUser());
+    console.log('here app');
   }, []);
 
   return (
