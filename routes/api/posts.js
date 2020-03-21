@@ -58,7 +58,7 @@ router.post(
 );
 
 // @route   POST api/posts/comment/:id
-// @desc    Delete on a post
+// @desc    Delete comment on a post
 // @access  Private
 router.delete('/comment/:id/:comment_id', isAuth, postController.deleteComment);
 
