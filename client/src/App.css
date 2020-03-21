@@ -2,7 +2,7 @@
 :root {
   --primary-color: #17a2b8;
   --dark-color: #343a40;
-  --light-color: #f4f4f4;
+  --light-color: #f4e9ff;
   --danger-color: #dc3545;
   --success-color: #28a745;
 }
@@ -477,7 +477,7 @@ button {
 .post .comment-count {
   background: var(--light-color);
   color: var(--primary-color);
-  padding: 0.1rem 0.2rem;
+  padding: 0.2rem 0.2rem;
   border-radius: 5px;
   font-size: 0.8rem;
 }
